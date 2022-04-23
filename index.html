@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Ayam Petok</title>
+		<!--projectdescription--><meta name="description" content="New 3Sixty Virtual Tour Project"><!--projectdescription-end-->
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta charset="utf-8">
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width, shrink-to-fit=no">
+		
+		<link rel="stylesheet" type="text/css" href="css/font-awesome.css">
+		<link rel="stylesheet" type="text/css" href="style.css">
+		
+		<!-- Insert this line above script imports  -->
+		<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+		
+		<script src="imagedata.js"></script>
+		<script src="jquery.js"></script>
+		<script src="three.min.js"></script>
+		<script src="panolens.min.js"></script>
+		
+		<!-- Insert this line after script imports -->
+		<script>if (window.module) module = window.module;</script>
+		
+		<style>
+		
+			
+						
+			/* SCROLLBAR STYLING */
+			/* width */
+			::-webkit-scrollbar {
+				width: 0.25em;
+				height: 0.25em;
+			}
+			/* Track */
+			::-webkit-scrollbar-track {
+				background: #2c3643; 
+			}
+			/* Handle */
+			::-webkit-scrollbar-thumb {
+				background: #0d9e59; 
+				transition: background .5s;
+			}
+			/* Handle on hover */
+			::-webkit-scrollbar-thumb:hover {
+				background: #00e075; 
+			}
+
+
+			html, body {
+				margin: 0;
+				width: 100%;
+				height: 100%;
+				overflow: hidden;
+				background-color: #000;
+				color; black;
+			}
+
+			a:link, a:visited{
+				color: #bdc3c7;	
+			}
+
+			.fullwrapper{
+				position: fixed;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background-color: black;
+			}
+			
+			#container {
+                width: 100%;
+                height: 100%;
+            }
+			
+			#tmp{
+				position: fixed;
+				top: 0;
+				left: 0; 
+				right: 0;
+				bottom: 0;
+				padding: 3em;
+				background-color: rgba(0,0,0,.5);
+				backdrop-filter: blur(5px);
+				display: none;
+			}
+		</style>
+	</head>
+	<body id="body">
+	    <div id="container" style="color: black;"></div>
+    	
+		
+		
+		<!--customhtml--><div class='customhotspot' id='IMG_20220409_071214_00_merged'></div><div class='customhotspot' id='IMG_20220409_072117_00_036'></div><!--customhtml-end-->
+		
+		<div id="tmp">
+			<div style="width: 100%; height: 100%; overflow: hidden; overflow-y: auto; box-sizing: border-box; position: relative;" id="tmpcontent"></div>
+			<div class="mediaclosebutton" onclick="hideTemp()"><i class="fa fa-times-circle"></i></div>
+		</div>
+
+		<div id="loading" class="fullwrapper" style="display: table; width: 100%; height: 100%;">
+    		<div style="display: table-cell; vertical-align: middle; text-align: center; color: white; font-size: 30px; padding: 50px;">
+    			<!--loadingtext-->Loading...<!--loadingtext-end-->
+    		</div>
+    	</div>
+		
+    	<script>
+			
+            var container = document.querySelector( '#container' );
+			/*panolens*/
+var viewer = new PANOLENS.Viewer( { container: container , controlBar: true,  output: 'console' , autoHideInfospot: false, } );
+/*panolens-end*/
+			
+			viewer.addUpdateCallback(function(){});
+			
+			/*panoramas*/
+var IMG_20220409_071214_00_merged = new PANOLENS.ImagePanorama( "panoramas/IMG_20220409_071214_00_merged.jpg" );
+			IMG_20220409_071214_00_merged.addEventListener('progress', function(e){
+				$("#loading").show();
+			});
+			IMG_20220409_071214_00_merged.addEventListener('load', function(e){
+				$("#loading").fadeOut();
+			});
+			IMG_20220409_071214_00_merged.addEventListener('click', function(e){
+			});
+
+viewer.add( IMG_20220409_071214_00_merged );
+var IMG_20220409_072117_00_036 = new PANOLENS.ImagePanorama( "panoramas/IMG_20220409_072117_00_036.jpg" );
+			IMG_20220409_072117_00_036.addEventListener('progress', function(e){
+				$("#loading").show();
+			});
+			IMG_20220409_072117_00_036.addEventListener('load', function(e){
+				$("#loading").fadeOut();
+			});
+			IMG_20220409_072117_00_036.addEventListener('click', function(e){
+			});
+
+viewer.add( IMG_20220409_072117_00_036 );
+$(document).ready(function(){ ChangePanorama('IMG_20220409_071214_00_merged '); });
+
+/*panoramas-end*/
+            
+			
+			function hideTemp(){
+				$("#tmp").fadeOut();
+				setTimeout(function(){
+					$("#tmpcontent").html("");
+				},1000);
+			}
+			
+			function showMedia(type, content){
+				switch(type){
+					case 1 :
+						//Image
+						$("#tmpcontent").html("<img src='"+content+"' style='width: 100%;'>");
+						$("#tmp").fadeIn();
+						break;
+					case 2 :
+						//Video
+						$("#tmpcontent").html("<video id='webvideo' controls autoplay style='width: 100%; height: 100%;'><source src='" +content+ "' type='video/mp4'> Your browser does not support the video tag. </video>");
+						$("#tmp").fadeIn();
+						break;
+					case 3 :
+						//Audio
+						$("#tmpcontent").html("<audio controls style='width: 100%;'><source src='"+content+"' type='audio/ogg'>Your browser does not support the audio tag.</audio>");
+						$("#tmp").fadeIn();
+						break;
+					case 4 :
+						//PDF
+						$("#tmpcontent").html("<iframe src='pdfjs/web/viewer.html?file=../../"+content+"' style='width: 100%; height: 99%;'></iframe>");
+						$("#tmp").fadeIn();
+						break;
+				}
+			}
+			
+			
+			
+			//Update Callback
+			viewer.addUpdateCallback(function(){
+				
+				/*viewerupdatecallback*/
+if(viewer.panorama == IMG_20220409_071214_00_merged){
+}
+
+if(viewer.panorama == IMG_20220409_072117_00_036){
+}
+/*viewerupdatecallback-end*/
+				
+				
+			});
+			
+			
+			
+			var hotspotsvisible = true;
+			function ShowMyInfospot(hs, elid){
+				var thehs = toScreenPosition(hs);
+				if(thehs.z < 1){
+					$("#" + elid).css({
+						"top" : (thehs.y - ($("#" + elid).height()/2)) + "px",
+						"left" : (thehs.x - ($("#" + elid).width()/2)) + "px",
+					});
+					if(hotspotsvisible)
+						$("#" + elid).show();
+				}else{
+					$("#" + elid).hide();
+				}
+				
+			}
+			
+			function toScreenPosition(obj)
+			{
+				var vector = new THREE.Vector3();
+				var widthHalf = 0.5 * innerWidth;
+				var heightHalf = 0.5 * innerHeight;
+				
+				//obj.updateMatrixWorld();				
+				vector.setFromMatrixPosition(obj.matrixWorld);
+				
+				
+				vector.project(viewer.camera);
+
+				vector.x = ( vector.x * widthHalf ) + widthHalf;
+				vector.y = - ( vector.y * heightHalf ) + heightHalf;
+
+				
+				return { 
+					x: vector.x,
+					y: vector.y,
+					z: vector.z,
+				};
+
+			};
+			
+			var currentPanorama;
+			function ChangePanorama(panorama){
+				currentPanorama = panorama;
+				HideInfospots(); 
+				//$("#loading").fadeIn();
+				//$(".customhotspot").fadeOut();
+				setTimeout(function(){
+					viewer.setPanorama(window[panorama]);
+				}, 500);
+				setTimeout(function(){
+					$("#" + panorama).fadeIn();
+				}, 1500);
+				
+			}
+			
+			function HideInfospots(){
+				$(".customhotspot").fadeOut();
+			}
+
+			/*customjs*//*customjs-end*/
+        </script>
+	</body>
+</html>
